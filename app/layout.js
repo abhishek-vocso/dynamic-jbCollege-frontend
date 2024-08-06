@@ -1,13 +1,14 @@
+import Navbar from '@/components/Navbar';
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        {/* Add your meta tags, title, and other head elements here */}
+      </head>
       <body>
         <header>
-          <nav>
-            <a href="/">Home</a>
-            <a href="/blog">Blog</a>
-            <a href="/courses">Courses</a>
-          </nav>
+          <Navbar />
         </header>
         <main>{children}</main>
       </body>
