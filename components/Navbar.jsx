@@ -6,8 +6,7 @@ import { displayMainNavigation } from '../lib/data';
 import styles from '../styles/Navbar.module.css';
 
 const Navbar = async() => {
-  const data = await displayMainNavigation();
- console.log("data", data) 
+  const data = await displayMainNavigation(); 
 
 
   return (

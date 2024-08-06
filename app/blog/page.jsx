@@ -13,6 +13,7 @@ async function fetchBlogs() {
 
   const apiUrl = getStrapiBaseUrl();
   const url = `${apiUrl}/api/blogs?${query}`;
+  console.log("🎉", apiUrl);
 
   try {
     const res = await fetch(url, configurations());
@@ -44,45 +45,51 @@ const BlogPage = async () => {
     );
   }
 
+  const apiUrl = getStrapiBaseUrl(); // Ensure apiUrl is available here
+
   return (
     <div>
       <h1>Blog Posts</h1>
       <ul>
-        {blogs.map((blog) => (
-          <li key={blog.id}>
-            <h2>{blog.attributes.title}</h2>
-            {blog.attributes.heading && (
-              <p><strong>Heading:</strong> {blog.attributes.heading}</p>
-            )}
-            {blog.attributes.subHeading && (
-              <p><strong>Subheading:</strong> {blog.attributes.subHeading}</p>
-            )}
-            {blog.attributes.author?.data?.attributes?.name && (
-              <p><strong>Author:</strong> {blog.attributes.author.data.attributes.name}</p>
-            )}
-            {blog.attributes.blog_category?.data?.attributes?.name && (
-              <p><strong>Category:</strong> {blog.attributes.blog_category.data.attributes.name}</p>
-            )}
-            {blog.attributes.external_post_url && (
-              <p>
-                <strong>External Post URL:</strong>{" "}
-                <a href={blog.attributes.external_post_url} target="_blank" rel="noopener noreferrer">
-                  {blog.attributes.external_post_url}
-                </a>
-              </p>
-            )}
-            {blog.attributes.CoverImage?.data?.attributes?.url && (
-              <div>
-                <strong>Cover Image:</strong>
-                <img
-                  src={`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}${blog.attributes.CoverImage.data.attributes.url}`}
-                  alt="Cover"
-                  style={{ maxWidth: "100%", height: "auto" }} // Make the image responsive
-                />
-              </div>
-            )}
-          </li>
-        ))}
+        {blogs.map((blog) => {
+          const coverImageUrl = blog.attributes.CoverImage?.data?.[0]?.attributes?.url;
+
+          return (
+            <li key={blog.id}>
+              <h2>{blog.attributes.title}</h2>
+              {blog.attributes.heading && (
+                <p><strong>Heading:</strong> {blog.attributes.heading}</p>
+              )}
+              {blog.attributes.subHeading && (
+                <p><strong>Subheading:</strong> {blog.attributes.subHeading}</p>
+              )}
+              {blog.attributes.author?.data?.attributes?.name && (
+                <p><strong>Author:</strong> {blog.attributes.author.data.attributes.name}</p>
+              )}
+              {blog.attributes.blog_category?.data?.attributes?.name && (
+                <p><strong>Category:</strong> {blog.attributes.blog_category.data.attributes.name}</p>
+              )}
+              {blog.attributes.external_post_url && (
+                <p>
+                  <strong>External Post URL:</strong>{" "}
+                  <a href={blog.attributes.external_post_url} target="_blank" rel="noopener noreferrer">
+                    {blog.attributes.external_post_url}
+                  </a>
+                </p>
+              )}
+              {coverImageUrl && (
+                <div>
+                  <strong>Cover Image:</strong>
+                  <img
+                    src={`${apiUrl}${coverImageUrl}`}
+                    alt="Cover"
+                    style={{ maxWidth: "auto", height: "auto" }}
+                  />
+                </div>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
