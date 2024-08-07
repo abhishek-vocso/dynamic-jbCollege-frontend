@@ -1,10 +1,9 @@
-// import HeroSection from "@/components/HeroSection";
+import HeroSection from "@/components/HeroSection";
 
 export default async function HomePage() {
     return (
       <div>
-        {/* <HeroSection /> */}
-        Welcome
+        <HeroSection />
       </div>
     );  
 }

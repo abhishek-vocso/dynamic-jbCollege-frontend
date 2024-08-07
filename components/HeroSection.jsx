@@ -1,64 +1,52 @@
-// "use client"
+import { displayHeroSection } from "@/lib/data";
+import '../styles/HeroSection.module.css';
+import { getStrapiBaseUrl } from '../lib/utils';
 
-// import React, { useEffect, useState } from 'react';
-// import { Swiper, SwiperSlide } from 'swiper/react';
-// import 'swiper/css';
-// import 'swiper/css/navigation';
-// import 'swiper/css/pagination';
-// import SwiperCore, { Navigation, Pagination, Autoplay } from 'swiper';
-// import FetchAPI from '../lib/api'; // Adjust the path as necessary
+const HeroSection = async () => {
+    const { data } = await displayHeroSection();
+    const { attributes } = data;
+    // console.log("🎉 Data:", data);
 
-// SwiperCore.use([Navigation, Pagination, Autoplay]);
+    const apiUrl = getStrapiBaseUrl();
+    // console.log("🎉", attributes.HeroImage?.data?.[1]?.attributes?.url);
 
-// const HeroSection = () => {
-//   const [slides, setSlides] = useState([]);
+    // Extract hero image URL based on its structure
+    const heroImageUrl1 = attributes.HeroSection.HeroImage?.data?.[0]?.attributes?.url || '';
+    const heroImageUrl2 = attributes.HeroSection.HeroImage?.data?.[1]?.attributes?.url || '';
+    // console.log("🎉", data.attributes.HeroSection.HeroImage.data);
 
-//   useEffect(() => {
-//     const loadSlides = async () => {
-//       try {
-//         const data = await FetchAPI('/'); // Ensure this endpoint matches your setup
-//         setSlides(data);
-//       } catch (error) {
-//         console.error("Failed to fetch data:", error);
-//       }
-//     };
+    return (
+        <div className="hero-section">
+            <h1>{attributes.HeroSection.HeroHeading}</h1>
+            <h2>{attributes.HeroSection.HeroSubheading}</h2>
+            {(heroImageUrl1 || heroImageUrl2) && (
+                <div>
+                    {heroImageUrl1 && (
+                        <img
+                            src={`${apiUrl}${heroImageUrl1}`}
+                            alt="Hero"
+                            style={{ maxWidth: "100%", height: "auto" }}
+                        />
+                    )}
+                    {heroImageUrl2 && (
+                        <img
+                            src={`${apiUrl}${heroImageUrl2}`}
+                            alt="Hero"
+                            style={{ maxWidth: "100%", height: "auto" }}
+                        />
+                    )}
+                </div>
+            )}
+            {attributes.HeroButtonText && attributes.HeroButtonURL && (
+                <div>
+                    <a href={attributes.HeroButtonURL} className="hero-button">
+                        {attributes.HeroButtonText}
+                    </a>
+                </div>
+            )}
+            {/* Add more sections if needed */}
+        </div>
+    );
+}
 
-//     loadSlides();
-//   }, []);
-
-//   return (
-//     <div className="hero-slider">
-//       <Swiper
-//         slidesPerView={1}
-//         navigation
-//         pagination={{ clickable: true }}
-//         loop={true}
-//         autoplay={{
-//           delay: 2500,
-//           disableOnInteraction: false,
-//         }}
-//       >
-//         {slides.map((slide, index) => (
-//           <SwiperSlide key={index}>
-//             <div style={{
-//               backgroundImage: `url(${slide.image.url})`,
-//               height: '100vh',
-//               backgroundSize: 'cover',
-//               backgroundPosition: 'center'
-//             }}>
-//               <div className="text-overlay">
-//                 <h1>{slide.title}</h1>
-//                 <p>{slide.subtitle}</p>
-//                 <button onClick={() => window.location.href = slide.buttonLink}>
-//                   {slide.buttonText}
-//                 </button>
-//               </div>
-//             </div>
-//           </SwiperSlide>
-//         ))}
-//       </Swiper>
-//     </div>
-//   );
-// };
-
-// export default HeroSection;
+export default HeroSection;
