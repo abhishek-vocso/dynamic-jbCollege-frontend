@@ -1,59 +1,38 @@
+// CoursePage.js
 import React from "react";
-import qs from "qs";
-import { configurations, getStrapiBaseUrl } from "../../lib/utils";
+import { fetchCourses } from "../../lib/data"; 
 
-// Function to fetch courses data
-async function fetchCourses() {
-  const query = qs.stringify({
-    populate: {
-
-    },
-  });
-
-  const apiUrl = getStrapiBaseUrl();
-  const url = `${apiUrl}/api/courses?${query}`; 
-
+const CoursePage = async () => {
   try {
-    const res = await fetch(url, configurations());
+    const { courses, error } = await fetchCourses();
 
-    if (!res.ok) {
-      const errorMsg = `Failed to fetch courses. Status: ${res.status}`;
-      console.error(errorMsg);
-      return { courses: [], error: errorMsg };
+    if (error) {
+      return (
+        <div>
+          <h1>Courses</h1>
+          <p>Failed to load courses: {error}</p>
+        </div>
+      );
     }
 
-    const data = await res.json();
-    return { courses: data.data, error: null };
-  } catch (error) {
-    const errorMessage = error.message || "An unknown error occurred.";
-    console.error("Error fetching courses:", errorMessage);
-    return { courses: [], error: errorMessage };
-  }
-}
-
-// React component to render courses
-const CoursePage = async () => {
-  const { courses, error } = await fetchCourses();
-
-  if (error) {
     return (
       <div>
         <h1>Courses</h1>
-        <p>Failed to load courses: {error}</p>
+        <ul>
+          {courses.map((course) => (
+            <li key={course.id}>{course.attributes.Title}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  } catch (error) {
+    return (
+      <div>
+        <h1>Courses</h1>
+        <p>Failed to load courses: {error.message}</p>
       </div>
     );
   }
-
-  return (
-    <div>
-      <h1>Courses</h1>
-      <ul>
-        {courses.map((course) => (
-          <li key={course.id}>{course.attributes.Title}</li>
-        ))}
-      </ul>
-    </div>
-  );
 };
 
 export default CoursePage;
